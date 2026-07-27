@@ -1,18 +1,25 @@
-include ':app'
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        def file = new File(settingsDir, "local.properties")
+        if (file.exists()) {
+            properties.load(file.newDataInputStream())
+        }
+        def sdkPath = properties.getProperty("flutter.sdk")
+        if (sdkPath == null) {
+            sdkPath = System.getenv("FLUTTER_ROOT")
+        }
+        return sdkPath
+    }()
+    if (flutterSdkPath != null) {
+        includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+    }
 
-def localPropertiesFile = new File(rootProject.projectDir, 'local.properties')
-def properties = new Properties()
-
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader -> properties.load(reader) }
-}
-
-def flutterSdkPath = properties.getProperty('flutter.sdk')
-if (flutterSdkPath == null) {
-    flutterSdkPath = System.getenv("FLUTTER_ROOT")
-}
-if (flutterSdkPath != null) {
-    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
 }
 
 plugins {
@@ -20,3 +27,5 @@ plugins {
     id "com.android.application" version "7.4.2" apply false
     id "org.jetbrains.kotlin.android" version "1.8.20" apply false
 }
+
+include ":app"
