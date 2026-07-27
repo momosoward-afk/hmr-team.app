@@ -33,6 +33,7 @@ android {
     }
 
     kotlinOptions {
+        freeCompilerArgs = ['-language-version', '1.8']
         jvmTarget = '1.8'
     }
 
