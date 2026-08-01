@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'offline_screen.dart';
 
 class WebviewScreen extends StatefulWidget {
@@ -98,9 +97,13 @@ class _WebviewScreenState extends State<WebviewScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SpinKitDoubleBounce(
-                          color: Color(0xFF3B82F6),
-                          size: 70.0,
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(
+                            color: Color(0xFF3B82F6),
+                            strokeWidth: 4,
+                          ),
                         ),
                         SizedBox(height: 25),
                         Text(
