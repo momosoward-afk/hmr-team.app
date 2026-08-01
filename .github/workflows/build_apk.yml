@@ -36,6 +36,7 @@ jobs:
         run: |
           cd hmr_mobile_app
           python3 generate_icon.py
+          dart run flutter_launcher_icons
 
       - name: Build APK (Release)
         run: |
