@@ -1,5 +1,5 @@
 name: hmr_mobile_app
-description: A Flutter WebView application wrapper for HMR Marketing Platform (hmr-team.com).
+description: A Flutter WebView application wrapper for HMR Marketing Platform.
 version: 1.0.0+1
 
 environment:
@@ -9,7 +9,6 @@ dependencies:
   flutter:
     sdk: flutter
   webview_flutter: ^4.4.2
-  flutter_spinkit: ^5.2.0
 
 dev_dependencies:
   flutter_test:
