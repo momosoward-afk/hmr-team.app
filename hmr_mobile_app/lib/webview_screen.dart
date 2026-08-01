@@ -29,28 +29,33 @@ class _WebviewScreenState extends State<WebviewScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
-            setState(() {
-              _isLoading = true;
-              _hasError = false;
-            });
+            if (mounted) {
+              setState(() {
+                _isLoading = true;
+                _hasError = false;
+              });
+            }
           },
           onPageFinished: (String url) {
-            setState(() {
-              _isLoading = false;
-            });
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
           },
           onWebResourceError: (WebResourceError error) {
-            // Show custom offline screen on network failure
             if (error.errorType == WebResourceErrorType.hostLookup ||
                 error.errorType == WebResourceErrorType.connect ||
                 error.errorType == WebResourceErrorType.timeout ||
                 error.description.contains('ERR_INTERNET_DISCONNECTED') ||
                 error.description.contains('ERR_CONNECTION_REFUSED') ||
                 error.description.contains('ERR_NAME_NOT_RESOLVED')) {
-              setState(() {
-                _hasError = true;
-                _isLoading = false;
-              });
+              if (mounted) {
+                setState(() {
+                  _hasError = true;
+                  _isLoading = false;
+                });
+              }
             }
           },
         ),
@@ -72,16 +77,13 @@ class _WebviewScreenState extends State<WebviewScreen> {
       );
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
+    return WillPopScope(
+      onWillPop: () async {
         if (await _controller.canGoBack()) {
           _controller.goBack();
-        } else {
-          // Close the app gracefully when no history is left
-          SystemNavigator.pop();
+          return false;
         }
+        return true;
       },
       child: Scaffold(
         backgroundColor: const Color(0xFF070B14),
