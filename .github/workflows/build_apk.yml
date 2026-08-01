@@ -41,7 +41,7 @@ jobs:
       - name: Build APK (Release)
         run: |
           cd hmr_mobile_app
-          flutter build apk --release --no-tree-shake-icons
+          flutter build apk --release --no-tree-shake-icons --no-shrink
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
