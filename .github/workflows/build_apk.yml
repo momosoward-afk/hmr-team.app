@@ -24,12 +24,17 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.9'
+          channel: 'stable'
 
       - name: Install Dependencies
         run: |
           cd hmr_mobile_app
           flutter pub get
+
+      - name: Generate App Icon
+        run: |
+          cd hmr_mobile_app
+          python3 generate_icon.py
 
       - name: Build APK (Release)
         run: |
