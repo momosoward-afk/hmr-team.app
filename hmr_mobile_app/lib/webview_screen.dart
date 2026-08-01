@@ -59,7 +59,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://hmr-team.com'));
+      ..loadRequest(Uri.parse('https://tigermomo.pythonanywhere.com/'));
   }
 
   @override
@@ -71,7 +71,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
             _hasError = false;
             _isLoading = true;
           });
-          _controller.loadRequest(Uri.parse('https://hmr-team.com'));
+          _controller.loadRequest(Uri.parse('https://tigermomo.pythonanywhere.com/'));
         },
       );
     }
@@ -108,6 +108,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
                         SizedBox(height: 25),
                         Text(
                           'منصة HMR للتسويق',
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -118,6 +119,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
                         SizedBox(height: 8),
                         Text(
                           'جاري تحميل النظام بأمان...',
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(
                             color: Color(0xFF94A3B8),
                             fontSize: 14,
