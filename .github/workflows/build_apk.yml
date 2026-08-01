@@ -15,11 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java JDK 17
+      - name: Set up Java JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -41,7 +41,7 @@ jobs:
       - name: Build APK (Release)
         run: |
           cd hmr_mobile_app
-          flutter build apk --release --no-tree-shake-icons --no-shrink
+          flutter build apk --release --no-tree-shake-icons
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
