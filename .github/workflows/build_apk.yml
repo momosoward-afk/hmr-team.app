@@ -24,7 +24,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.16.9'
 
       - name: Install Dependencies
         run: |
@@ -34,7 +34,7 @@ jobs:
       - name: Build APK (Release)
         run: |
           cd hmr_mobile_app
-          flutter build apk --release --no-tree-shake-icons -Pkotlin.compiler.languageVersion=1.8
+          flutter build apk --release --no-tree-shake-icons
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
