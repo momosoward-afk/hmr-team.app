@@ -1,19 +1,23 @@
-import os, base64
+import os, urllib.request
 
-# صورة PNG 512x512 RGBA فائقة الجودة ومعالجة لـ Android AAPT2
-b64_logo = """
-iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAABC2lDQ1BJQ0MgUHJvZmlsZQAAeJyVkLFOwlAUhr+LJILBOMjAwNCBgUWCDsaBCYaGzRRJKE5tKV2gbW5rfAHZGFjZiItvIK/ghomJg5OPQEh0NtdqysLAmb785885/zkgXgCydRj7sTT0ptYz+9rhJwKhOmA5UcjuEvD9nnjfzti/8gM3coA1UJE9sw+iCBS9hKuK7YQbiu/jMAZxrVjeGC0QA6DqbbG9xU4olX8KNMajO7XrLzcF1+92gBxQJsJAp6nuTyzBI1x9wcEs1ew5LCdQ+ki1ygJOHuB5lWrpT0JLWr9SFsgMh7B5gmMTTl/h6Pb/ETuyqXlldAICPEa4aLTxcaihcUGdcy5/AKbWPz8bOFjoAAEAAElEQVR4nKT9aYxua3Yehq1vqjrn3KHv7YHdTTa71WJz0EDRGihZlqJQVGxrSCQ5jBILUgTECRIHsQ04duwECBDAP/IjiB3YMOA/iuxESRzDiqzIkmhNJCVxEEmx2XP3nefxzHNVfVOwnmG9a+9Tt0Ug1Ty8dep89X17v/t91/CsZz1rcTgcjsfjMSIWsVhE5Pf5Z5F/iYj8F35zjHzBUj/Pr3zN3bt34/XXX4/lclm/078Oh0N97/f1Z/hn/r5//ciP/EhcvXq1/i3ff/77+D6vUL8+3sefeYzDcR/74yrWy1U8enA/Xnr5xYjlmu+x5+sOh30cj7s4HJaxx9vl+6zwum2s4+E24sP75/HWjfvx+od34/rdx3G+jzguN3FYriIWyzji3ldxXCxjmWvpNcr/LZe8lgXXGD/P9eIi1v1gbfWCWsvFEa/zuvNJ4Qe633xPfj7Xww/N65PvydcdtY6HRcSSj5Pvd1zmLWDVjnGIZb4ffj/vhfegm8Hn1P5YLvjv+v6Yz1rXoZuIg67D/8Ol4eW5X474fTwF3bvf2++xWOb3bX/od8fz59cqb8DXgrfSSh2X2Lt4BHlXum/uKa/N2M9eFH9urh/+m58XuS7cc4vFSuuf75174BDHw1hz7IfjIparRX2u7y+fgX9W38deT/ZQl5TvtdLa5//HuuQ14/cWsT/ytbhWXGfbO7i0YxwXh8m+mZwb3MticlaPuG9e5+GQ15rPlfsl9LT4/loT7EO+b+5Rrwn3DM9mtwu8Nz6Ew/EYK/03/3Q7wacZcdCP+79zx/AVvC7dF64h74/XwHtd4brSDuSJGzZiObUfx/57siXHfN57Pe/8Wf7+IY75c9x//j2fm69h3Kc/h08mLrF3WkeZ1iX2F/dMXs/hOWNZ1p7zvh7PMF35xHvvvRsPHz6Ijz33fDzx9LVoNps4HA5xsT1p8rWlV1B5/b69X8fv/L1/GH/vn/xe7Hbncbnz906wN1k6XGz+8g5x44+N1A8/c9qQ/7e0bJ7B4Dq5f5+m/5cOAC42V9wQ9q13bsS/87N/Lb722q1YX7mq+X7G86vTptTqIis4fXqKjWlQZ41vffOb8eq334iTTVYgG2oM/2w2G3C02Vl2aKk/S7y287g5T2bA973hC/pG/2bve82/9tDk09SgA8YwHq8R+eP7yE7eXy/f2c9jEaMftu2w7jW+63Xp+v3z9/zL8wY7hY182Fq+b4iN7pfx+y5jufyMfeF/y3H++7p1q6+rD9vX9r/3W23+25Yn+32m2vUen8T53bvxzltvxoPf+h1/rP24+64e2h35P69t7zPfx2d96Pvw65Y7fF+XpSxf91b3W8t3c+66r0/t5yq++yB+/mt/J24+vBOny3WcLK7G1fUqtqfNqOesM29qG3fuvR//+Vf+Vdy7e1f13b5v+Z79fC/+u+/u5y+e12c1/y//6YjA/M2+d3vV1k9C9+6/w1e83k4f7+5fxe5iH+9/cDf+6t/52fjW6zfjcHYVp+uTWD11Tf2+a7tWcWn+b37Q66/9erzxtW/EMsllOsk2jC5Y66Q7Q7y7e4+v7n+e4O889T+Zg3v1x89y/p1pXvR19lP71/l7/Fmfl82d/T3r+D3r22vj32/Lz/O3w+E+/JnP4ffkGnkP59d3eB50H1jD9rBbrOP/8V/+o/jlv/s/xfnFPhY3rsf55eO4fn2Tu3d169/d0iV1G1/6/d+Pd+7eieXJNs4fPYzbH9yO3//Dvz/eeevN2J2d19yT3k8/X+3D/Z5f04M1j6Z/n+/P5Q/+4A/+wH+qK5qQ3uK1k36t44PzXXzw1gext9X29r24e38Xb966y4X+t1l3+bvvvh8vbT6IN+4+jF/95hvxxs378fDCLjnvb3064tqV9bi6WsXJchNrm6iVbdrL2O8vYu9nO9eQZ/jH22g2e7/z2eB6T7t9/P0N743L+H++d51q6Mbr9g95z9aG650a3u84a1w2x63N6fG7eG+1rP2Q/02rR8b/7j/01Wn+t126/f12e8w678dlyPtzO+uN2xze29Zf23+2d2qNl9Y/b2D7YJ5d5O/D/L3VdfW4w9fRddL5yq/H82/4e3o8uI6tPzL2eA/+e9+rXk/nLq7b87N466Vb8crnno+L23filW/9atymP756dRVX29hGvh7G1/3d+7G/cxcK383NlVgc1uQzH/6x/2P+hV5rL+b785H3mvdC98V/f1hfj83VO3F+47348ss3YnNxjnduPIif/sWvxjduPYyrbK+wubyKVdb42q17sV1uYn3leVydP4uUjN0fdrHf3Yzrd74fDx98FPc//CDefeXF+PLXvxavf/ROPH26jk03Kk5i6dGz/hT/210s8oHzvY2mI3P735m2t41fR8p+5fKxfl3u+4pB8770wJ/8q93B604X5v1h+39Z/5f4sF1s7/xveP+5f7nvyfXg82f23WvjNcfu3R81b1p327gJ++m4+2/+xve39dveb3a7vdfFjQf334v/8q//XHwYe0yv4s37p2F1N7507YpB91K6aUoW+Djeur2LH/+r/yi+9s2v1xrgfWv42dffw36w97/f4x/61z+nCPAHft/31E3UgdZ/78v/j2/dijfu3o3z813cevhw5p6O8+m4c/d2vPzWW3H7g9vxwXsn8dJLb8cbN9+LhxfH2JxUaVwVwW4ZJydXsVlfxeb0apwmxYJit88yV7q12+2Z4Tox1zE04p2K3mEesYyT9TI2m9N49Opb8drt2/HG/Xvx0b178Y07d+M1O/l2k/uN9XqT/Y71x4x/2C1j15v+9qY66+n494f1W5yB9/02n099d+Vn5+/V/qX6O+f+5z7m3gN790vjef8378H45q3v/0D2q+Nl4+8q7h1fX+7H/Wf+xK+r1+C641p6v4Pftd30Z861Zk8m688f9V+Mbf242b78W99vXv/921vfrH5f9d12r/GZfn0c47y3V30+93E4fBTH9U38m3/vV+In/+4LceupJ6/1qL5Y9L3y8t04fvQe86XnNldjv9vE/Uf32Zbs4b0P4tW33ohXbrwd109O4vrJVTplm1ienMT1m1vEwJ3F5uq1uHbnXpw8dS2eunM3rhz2cdxsY3F6GvfevRnPffpZ5d/tT3NctoP9pT3q67wP/TznzM2pLpT8p3c0tO/+qvdNl+n2P0K9P/uW34f9a/4y+5155+V00p6M4/O5NvgPZz3sS2Svv+/l87sU6Z6n/7hX5N3D9qT1/5f8p7d+/kK5+q2O37l33//z3/5/x3jH3b/Jvvp35N/3q+F+g1zFp+/8f/jF1+Jv//x34jvvvBm3b320z933X7u72A1y516J3ePz2J6tYvPUtbj25H16zC72fXN1vImTza146/W/E7/y3v34gS9+Kp44+dK1fN9nQ5pQ37x/629H49aX9qH392e2w/b325C2+78v94P/t2t+/6W2f3922vV/Lw99r+N3j99n/+5a9g/73fE+p/bZvu4dO12a81k//a62/n9c1l/eR2b/v8/f8/lV9T8j9o1+D663j5Ovx2fx/n/1f/n3fyn+29+8F3/6p34wfu+Xnmt+53q63/Xl+M+a/x87//9xO9nI53N8+aFz4v/89o/Ef/3P34qH54+Zp31z501QO84f4p0x5vH5gTle3cTymWfj1mcfxzOf/Ew88/Qz4bX2Y7+L19+8EQ/vXl453r61Fk8+/Vw8tbnW/I/j3dder8n2iWd/0L+9R9wG+/+Lz95lW36780v63c7u/V2f7+/+53/P0m0e47087s2H7m/5rO77+qV8fT3x0d4/2u7nN56b2ZqPfl/t3eX/fC97N35P169X17/3yP/u05d3b0xH3Hq8i6+9dS++/er9OD/ex6Ozy6Xh1bNux9l4HjG6G82Qz2Mdx66bF8+X+z5Tnd0p5u3rJ+f7ePvW3bjeiV776vjLz93+r73aJ3N3T8uKfvH+Zt7yvN6j52P/h3Hn1q/yv/T2y17Pbf7v9p9z/f/n8u/z/0f/vv48fF6z+M2v19+t58H89/Z5yv+nIeJ+06+j7bveO/4v093lPz9pUvC9H3P+52yJm6+n/vJq/mF/Lp4qLffK+3N7fO6a/q+/l/jFkZvf/b5pWp5t2J/p75x8c9+53vf+sbXv/HaG19/+z0oHQAA/z8e/wEAdp9Y9G6f2c3P8c/Pzv0y5e/n5m4T6qK+cflr9167e+el69sP+n/yZkF1AADAIQsAAIA+2746779s3q/h4A0AAIcsAADg9v5j962X5+lWv5xG38n8T69/5f2XXw6/evz8eI8P3AEA4EAEAAAA/B+q1j+m5bZrmqaa65t2rh7s3m3X802422E1AABwqAIAAPz+367c3g213T44l93i91+2j+38e/b71v2385+r6b+T//eX/417l3fefOedd+7fvbt/AwwAAGCH/w8AAAD//wMAN135ZqDq4lEAAAAASUVORK5CYR==
-"""
+url = "https://tigermomo.pythonanywhere.com/static/img/logo.png"
+print(f"Downloading app icon from {url}...")
 
-# فك التشفير وحفظ الصور بأعلى دقة بدقة 512x512 لكل المقاسات
-img_bytes = base64.b64decode(b64_logo)
-res_dir = os.path.join(os.path.dirname(__file__), 'android', 'app', 'src', 'main', 'res')
+try:
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    with urllib.request.urlopen(req, timeout=10) as response:
+        img_bytes = response.read()
+except Exception as e:
+    print(f"Error downloading icon: {e}")
+    img_bytes = None
 
-folders = ['mipmap-mdpi', 'mipmap-hdpi', 'mipmap-xhdpi', 'mipmap-xxhdpi', 'mipmap-xxxhdpi']
-for f in folders:
-    target_dir = os.path.join(res_dir, f)
-    os.makedirs(target_dir, exist_ok=True)
-    target_file = os.path.join(target_dir, 'ic_launcher.png')
-    with open(target_file, 'wb') as img_out:
-        img_out.write(img_bytes)
-    print(f'Generated {target_file}')
+if img_bytes:
+    res_dir = os.path.join(os.path.dirname(__file__), 'android', 'app', 'src', 'main', 'res')
+    folders = ['mipmap-mdpi', 'mipmap-hdpi', 'mipmap-xhdpi', 'mipmap-xxhdpi', 'mipmap-xxxhdpi']
+    for f in folders:
+        target_dir = os.path.join(res_dir, f)
+        os.makedirs(target_dir, exist_ok=True)
+        target_file = os.path.join(target_dir, 'ic_launcher.png')
+        with open(target_file, 'wb') as img_out:
+            img_out.write(img_bytes)
+        print(f'Generated {target_file}')
