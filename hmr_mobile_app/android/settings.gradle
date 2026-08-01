@@ -1,31 +1,6 @@
-pluginManagement {
-    def flutterSdkPath = {
-        def properties = new Properties()
-        def file = new File(settingsDir, "local.properties")
-        if (file.exists()) {
-            properties.load(file.newDataInputStream())
-        }
-        def sdkPath = properties.getProperty("flutter.sdk")
-        if (sdkPath == null) {
-            sdkPath = System.getenv("FLUTTER_ROOT")
-        }
-        return sdkPath
-    }()
-    if (flutterSdkPath != null) {
-        includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
-    }
-
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
-plugins {
-    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    id "com.android.application" version "7.4.2" apply false
-    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
-}
-
-include ":app"
+org.gradle.jvmargs=-Xmx2048M
+android.useAndroidX=true
+android.enableJetifier=true
+kotlin.suppressUnsupportedCompileLanguageVersionError=1.4
+kotlin.compiler.languageVersion=1.8
+kotlin.compiler.apiVersion=1.8
